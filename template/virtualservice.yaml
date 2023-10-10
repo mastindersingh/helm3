@@ -1,0 +1,21 @@
+{{- if .Values.virtualService.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "elastic-agent-helm.fullname" . }}
+  labels:
+    {{- include "elastic-agent-helm.labels" . | nindent 4 }}
+spec:
+  hosts:
+    {{- toYaml .Values.virtualService.hosts | nindent 4 }}
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: {{ include "elastic-agent-helm.fullname" . }}
+        port:
+          number: {{ .Values.service.port }}
+{{- end }}
+

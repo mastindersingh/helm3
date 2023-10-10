@@ -1,0 +1,5 @@
+apiVersion: v2
+name: elastic-agent-helm
+description: Helm chart for deploying Elastic Agent with Fleet Server on Kubernetes
+version: 0.1.0
+

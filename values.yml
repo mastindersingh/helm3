@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+  repository: wfcr-proxy-a.wellsfsrgo.net/docker-virtual/beats/elastic-agent
+  tag: 8.9.2
+  pullPolicy: IfNotPresent
+
+imagePullSecrets:
+  - name: grafana-cred
+
+fleetServer:
+  enable: true
+  elasticsearchHost: "<elasticsearch-host>"
+  serviceToken: "<service-token>"
+  policyID: "<fleet-server-policy>"
+
+service:
+  type: ClusterIP
+  port: 8220
+
+virtualService:
+  enabled: true
+  hosts:
+    - "elastic-agent.fleet.local"
+
+resources: {}
+

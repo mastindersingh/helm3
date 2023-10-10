@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "elastic-agent-helm.fullname" . }}
+  labels:
+    {{- include "elastic-agent-helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "elastic-agent-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "elastic-agent-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: FLEET_SERVER_ENABLE
+              value: "{{ .Values.fleetServer.enable }}"
+            - name: FLEET_SERVER_ELASTICSEARCH_HOST
+              value: "{{ .Values.fleetServer.elasticsearchHost }}"
+            - name: FLEET_SERVER_SERVICE_TOKEN
+              value: "{{ .Values.fleetServer.serviceToken }}"
+            - name: FLEET_SERVER_POLICY_ID
+              value: "{{ .Values.fleetServer.policyID }}"
+          ports:
+            - containerPort: 8220
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
