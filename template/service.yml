@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "elastic-agent-helm.fullname" . }}
+  labels:
+    {{- include "elastic-agent-helm.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 8220
+  selector:
+    {{- include "elastic-agent-helm.selectorLabels" . | nindent 4 }}
+
